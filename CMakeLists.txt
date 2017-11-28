@@ -25,3 +25,4 @@ endfunction()
 
 
 add_playground_executable(memorybuffer memorybuffer.cpp)
+add_playground_executable(bitstream bitstream.cpp)
