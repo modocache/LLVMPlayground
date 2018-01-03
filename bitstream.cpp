@@ -8,14 +8,13 @@
 #include <iostream>
 #include <system_error>
 
-
 using namespace llvm;
 
 int main() {
   SmallVector<char, 0> Buffer;
   BitstreamWriter Writer(Buffer);
 
-  const unsigned char Signature[] = { 0xde, 0xad, 0xbe, 0xef };
+  const unsigned char Signature[] = {0xde, 0xad, 0xbe, 0xef};
   for (unsigned char Byte : Signature)
     Writer.Emit(Byte, 8);
 
@@ -98,4 +97,3 @@ int main() {
   Out.write((char *)&Buffer.front(), Buffer.size());
   return 0;
 }
-

@@ -6,7 +6,6 @@
 #include <memory>
 #include <system_error>
 
-
 using namespace llvm;
 
 int main() {
@@ -14,11 +13,11 @@ int main() {
   std::cout << "Opening file \"" << FileName << "\"..." << std::endl;
 
   ErrorOr<std::unique_ptr<MemoryBuffer>> MemBufferOrErr =
-    MemoryBuffer::getFile(FileName);
+      MemoryBuffer::getFile(FileName);
   if (!MemBufferOrErr) {
     std::error_code ErrorCode = MemBufferOrErr.getError();
-    std::cerr << "An error occurred when opening file \""
-              << FileName << "\": "  << ErrorCode << std::endl;
+    std::cerr << "An error occurred when opening file \"" << FileName
+              << "\": " << ErrorCode << std::endl;
     return 1;
   }
 

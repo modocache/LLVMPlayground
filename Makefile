@@ -12,7 +12,7 @@ all:	submodule-init \
 			configure-llvm build-llvm \
 			configure-playground build-playground
 
-dev: configure-playground build-playground
+dev: format configure-playground build-playground
 
 submodule-init:
 	${GIT} submodule update --init --recursive
@@ -40,3 +40,13 @@ configure-playground:
 
 build-playground:
 	${CMAKE} --build ${PLAYGROUND_BUILD_DIR}
+
+format:
+ifdef CLANG_FORMAT
+	${CLANG_FORMAT} -i \
+		$(shell \
+			find ${SOURCE_DIR} \( -name '*.h' -o -name '*.cpp' \) \
+			-not -path '${SOURCE_DIR}/external/*' \
+			-not -path '${BUILD_DIR}/*')
+endif
+

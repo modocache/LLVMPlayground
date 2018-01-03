@@ -9,16 +9,17 @@ using namespace llvm;
 int main() {
   auto FileName = __FILE__;
   ErrorOr<std::unique_ptr<MemoryBuffer>> MemBufferOrErr =
-    MemoryBuffer::getFile(FileName);
+      MemoryBuffer::getFile(FileName);
   if (!MemBufferOrErr) {
     std::error_code ErrorCode = MemBufferOrErr.getError();
-    std::cerr << "An error occurred when opening file \""
-              << FileName << "\": "  << ErrorCode << std::endl;
+    std::cerr << "An error occurred when opening file \"" << FileName
+              << "\": " << ErrorCode << std::endl;
     return 1;
   }
 
   SourceMgr SM;
-  SM.AddNewSourceBuffer(std::move(MemBufferOrErr.get()), /*IncludeLoc*/SMLoc());
+  SM.AddNewSourceBuffer(std::move(MemBufferOrErr.get()),
+                        /*IncludeLoc*/ SMLoc());
   const MemoryBuffer *MemBuffer = SM.getMemoryBuffer(SM.getMainFileID());
 
   SMLoc FirstLoc = SMLoc::getFromPointer(MemBuffer->getBufferStart());
@@ -46,10 +47,10 @@ int main() {
   while (*CurrentChar != '>')
     ++CurrentChar;
   SMLoc EndOfIOStreamLoc = SMLoc::getFromPointer(CurrentChar);
-  SM.PrintMessage(StartOfIOStreamLoc, SourceMgr::DiagKind::DK_Remark,
-                  "Wouldn't you rather use <OHIOstream>?",
-                  None,
-                  SMFixIt(SMRange(StartOfIOStreamLoc, EndOfIOStreamLoc), "OHIOstream"));
+  SM.PrintMessage(
+      StartOfIOStreamLoc, SourceMgr::DiagKind::DK_Remark,
+      "Wouldn't you rather use <OHIOstream>?", None,
+      SMFixIt(SMRange(StartOfIOStreamLoc, EndOfIOStreamLoc), "OHIOstream"));
 
   return 0;
 }

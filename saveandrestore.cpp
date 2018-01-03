@@ -1,7 +1,6 @@
 #include "llvm/Support/SaveAndRestore.h"
 #include <cassert>
 
-
 static int Value = 0;
 
 static void doSomething() {
