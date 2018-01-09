@@ -17,6 +17,8 @@ dev: format configure-playground build-playground
 submodule-init:
 	${GIT} submodule update --init --recursive
 
+llvm: configure-llvm build-llvm
+
 configure-llvm:
 	mkdir -p ${LLVM_BUILD_DIR}
 	${CMAKE} \
