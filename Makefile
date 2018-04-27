@@ -8,9 +8,7 @@ PLAYGROUND_BUILD_DIR := ${BUILD_DIR}/playground
 GIT := git
 CMAKE := cmake
 
-all:	submodule-init \
-			configure-llvm build-llvm \
-			configure-playground build-playground
+all: submodule-init llvm playground
 
 dev: format configure-playground build-playground
 
@@ -31,6 +29,8 @@ configure-llvm:
 
 build-llvm:
 	${CMAKE} --build ${LLVM_BUILD_DIR}
+
+playground: configure-playground build-playground
 
 configure-playground:
 	mkdir -p ${PLAYGROUND_BUILD_DIR}
