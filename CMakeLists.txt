@@ -26,6 +26,7 @@ endfunction()
 
 
 add_playground_executable(memorybuffer memorybuffer.cpp)
+add_playground_executable(memorybuffer-argv memorybuffer-argv.cpp)
 add_playground_executable(bitstream bitstream.cpp)
 add_playground_executable(commandline commandline.cpp)
 add_playground_executable(crtp crtp.cpp)
