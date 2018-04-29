@@ -19,7 +19,13 @@ llvm_map_components_to_libnames(LLVM_LIBRARIES all)
 
 function(add_playground_executable target_name)
   add_executable(${target_name} ${ARGN})
-  set_target_properties(${target_name} PROPERTIES COMPILE_FLAGS "-fno-rtti")
+  set_target_properties(
+    ${target_name}
+    PROPERTIES
+      COMPILE_FLAGS
+        "-fno-rtti -fno-omit-frame-pointer -fsanitize=address"
+      LINK_FLAGS
+        "-fno-omit-frame-pointer -fsanitize=address")
   target_include_directories(${target_name} PUBLIC ${LLVM_INCLUDE_DIRS})
   target_link_libraries(${target_name} ${LLVM_LIBRARIES})
 endfunction()

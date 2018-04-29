@@ -38,7 +38,8 @@ configure-playground:
 		-H${SOURCE_DIR} \
 		-B${PLAYGROUND_BUILD_DIR} \
 		-DLLVM_CMAKE_CONFIG_PATH=${LLVM_BUILD_DIR}/lib/cmake/llvm \
-		-G Ninja
+		-G Ninja \
+		-DCMAKE_BUILD_TYPE=Debug
 
 build-playground:
 	${CMAKE} --build ${PLAYGROUND_BUILD_DIR}
