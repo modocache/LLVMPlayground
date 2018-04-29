@@ -1,5 +1,6 @@
 #include "llvm/ADT/StringRef.h"
 #include "llvm/Support/ErrorOr.h"
+#include "llvm/Support/FileSystem.h"
 #include "llvm/Support/MemoryBuffer.h"
 
 #include <iostream>
@@ -19,10 +20,13 @@ int main(int argc, char **argv) {
   StringRef FileName = argv[1];
   std::cout << "Opening file \"" << FileName.str() << "\"..." << std::endl;
 
-  // HERE
   ErrorOr<std::unique_ptr<MemoryBuffer>> MemBufferOrErr =
       MemoryBuffer::getFileOrSTDIN(FileName);
 
+  int FD;
+  SmallString<128> RealPath;
+  std::error_code OpenErrorCode =
+    sys::fs::openFileForRead(FileName, FD, &RealPath);
 
   if (!MemBufferOrErr) {
     std::error_code ErrorCode = MemBufferOrErr.getError();
