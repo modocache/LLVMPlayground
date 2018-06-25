@@ -7,6 +7,7 @@
 #include <unistd.h>
 
 int main() {
+  // I'll open this file itself and read it into memory.
   auto FileName = __FILE__;
 
   // The system call open(2) gets a file descriptor
@@ -14,11 +15,11 @@ int main() {
   int OpenFlags = O_RDONLY;
   int FD = open(FileName, OpenFlags);
 
-  // open(2) returns a -1 to indicate the file
-  // could not be opened.
+  // open(2) returns a -1 if the file could not be opened.
+  // In this case, print an error and return.
   if (FD < 0) {
     std::error_code Err(errno, std::generic_category());
-    std::cout << "[ERROR] Could not open file \""
+    std::cerr << "[ERROR] Could not open file \""
               << FileName << "\": " << Err.message()
               << std::endl;
     return 1;
@@ -30,7 +31,7 @@ int main() {
   struct stat Stat;
   if (fstat(FD, &Stat) < 0) {
     std::error_code Err(errno, std::generic_category());
-    std::cout << "[ERROR] Could not acquire information "
+    std::cerr << "[ERROR] Could not acquire information "
               << "on file descriptor \"" << FD
               << "\": " << Err.message() << std::endl;
     return 1;
@@ -56,7 +57,7 @@ int main() {
     ReadBytes = read(FD, Memory + Offset, ChunkSize);
     if (ReadBytes < 0) {
       std::error_code Err(errno, std::generic_category());
-      std::cout << "[ERROR] Could not read from file "
+      std::cerr << "[ERROR] Could not read from file "
                    "descriptor \""
                 << FD << "\": " << Err.message()
                 << std::endl;
@@ -84,7 +85,7 @@ int main() {
   // using the system call close(2).
   if (close(FD) < 0) {
     std::error_code Err(errno, std::generic_category());
-    std::cout << "[ERROR] Could not close file "
+    std::cerr << "[ERROR] Could not close file "
               << "descriptor \"" << FD << "\":"
               << Err.message() << std::endl;
     return 1;
