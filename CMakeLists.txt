@@ -17,6 +17,34 @@ include("${LLVM_DIR}/LLVMConfig.cmake")
 llvm_map_components_to_libnames(LLVM_LIBRARIES all)
 
 
+set("${CLANG_CMAKE_CONFIG_PATH}" CACHE STRING
+    "Path to the CMake config in a Clang build directory.")
+
+find_package(CLANG REQUIRED CONFIG NO_DEFAULT_PATH
+             PATHS "${CLANG_CMAKE_CONFIG_PATH}")
+include("${CLANG_CMAKE_DIR}/ClangConfig.cmake")
+
+set(CLANG_LIBRARIES
+    clangAnalysis
+    clangAST
+    clangBasic
+    clangCodeGen
+    clangDriver
+    clangEdit
+    clangFormat
+    clangFrontend
+    clangFrontendTool
+    clangIndex
+    clangLex
+    clangParse
+    clangSema
+    clangSerialization
+    clangToolingCore
+    clangRewrite
+    clangRewriteFrontend
+)
+
+
 function(add_playground_executable target_name)
   add_executable(${target_name} ${ARGN})
   set_target_properties(
@@ -26,8 +54,9 @@ function(add_playground_executable target_name)
         "-fno-rtti -fno-omit-frame-pointer -fsanitize=address"
       LINK_FLAGS
         "-fno-omit-frame-pointer -fsanitize=address")
-  target_include_directories(${target_name} PUBLIC ${LLVM_INCLUDE_DIRS})
-  target_link_libraries(${target_name} ${LLVM_LIBRARIES})
+  target_include_directories(${target_name}
+                             PUBLIC ${LLVM_INCLUDE_DIRS} ${CLANG_INCLUDE_DIRS})
+target_link_libraries(${target_name} ${LLVM_LIBRARIES} ${CLANG_LIBRARIES})
 endfunction()
 
 
@@ -36,6 +65,7 @@ add_playground_executable(memorybuffer-argv memorybuffer-argv.cpp)
 add_playground_executable(bitstream bitstream.cpp)
 add_playground_executable(commandline commandline.cpp)
 add_playground_executable(crtp crtp.cpp)
+add_playground_executable(driver driver.cpp)
 add_playground_executable(mmap-read mmap-read.cpp)
 add_playground_executable(opttable opttable.cpp)
 add_playground_executable(path path.cpp)

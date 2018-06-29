@@ -17,6 +17,10 @@ submodule-init:
 
 llvm: configure-llvm build-llvm
 
+# LLVM CMake option LLVM_ENABLE_PROJECTS by default looks for a directory
+# with the given name at the same level as the LLVM source directory.
+# Since 'clang' resides alongside 'llvm' in the 'external' directory,
+# it is found during the configure step below.
 configure-llvm:
 	mkdir -p ${LLVM_BUILD_DIR}
 	${CMAKE} \
@@ -25,10 +29,14 @@ configure-llvm:
 		-G Ninja \
 		-DCMAKE_BUILD_TYPE=Debug \
 		-DLLVM_ENABLE_ASSERTIONS=On \
-		-DLLVM_TARGETS_TO_BUILD="X86"
+		-DLLVM_TARGETS_TO_BUILD="X86" \
+		-DLLVM_ENABLE_PROJECTS="clang"
 
 build-llvm:
 	${CMAKE} --build ${LLVM_BUILD_DIR}
+
+clean-llvm:
+	rm -rf ${LLVM_BUILD_DIR}
 
 playground: configure-playground build-playground
 
@@ -38,6 +46,7 @@ configure-playground:
 		-H${SOURCE_DIR} \
 		-B${PLAYGROUND_BUILD_DIR} \
 		-DLLVM_CMAKE_CONFIG_PATH=${LLVM_BUILD_DIR}/lib/cmake/llvm \
+		-DCLANG_CMAKE_CONFIG_PATH=${LLVM_BUILD_DIR}/lib/cmake/clang \
 		-G Ninja \
 		-DCMAKE_BUILD_TYPE=Debug
 
