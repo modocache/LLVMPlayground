@@ -1,6 +1,6 @@
 # LLVMPlayground
 
-This is a CMake project I use to experiment with LLVM libraries,
+This is a CMake project I use to experiment with LLVM and Clang libraries,
 by writing small example programs that use them.
 
 To use it yourself:
