@@ -25,8 +25,8 @@ int main(int argc, char **argv) {
 
   int FD;
   SmallString<128> RealPath;
-  std::error_code OpenErrorCode =
-    sys::fs::openFileForRead(FileName, FD, &RealPath);
+  std::error_code OpenErrorCode = sys::fs::openFileForRead(
+      FileName, FD, sys::fs::OF_None, &RealPath);
 
   if (!MemBufferOrErr) {
     std::error_code ErrorCode = MemBufferOrErr.getError();
