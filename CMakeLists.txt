@@ -13,7 +13,6 @@ set("${LLVM_CMAKE_CONFIG_PATH}" CACHE STRING
 
 find_package(LLVM REQUIRED CONFIG NO_DEFAULT_PATH
              PATHS "${LLVM_CMAKE_CONFIG_PATH}")
-include("${LLVM_DIR}/LLVMConfig.cmake")
 llvm_map_components_to_libnames(LLVM_LIBRARIES all)
 
 
@@ -22,7 +21,6 @@ set("${CLANG_CMAKE_CONFIG_PATH}" CACHE STRING
 
 find_package(CLANG REQUIRED CONFIG NO_DEFAULT_PATH
              PATHS "${CLANG_CMAKE_CONFIG_PATH}")
-include("${CLANG_CMAKE_DIR}/ClangConfig.cmake")
 
 set(CLANG_LIBRARIES
     clangAnalysis
