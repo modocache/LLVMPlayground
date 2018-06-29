@@ -8,19 +8,11 @@ string(APPEND CMAKE_C_FLAGS " -pedantic -Wall -Wextra")
 string(APPEND CMAKE_CXX_FLAGS " -pedantic -Wall -Wextra")
 
 
-set("${LLVM_CMAKE_CONFIG_PATH}" CACHE STRING
-    "Path to the CMake config in an LLVM build directory.")
-
-find_package(LLVM REQUIRED CONFIG NO_DEFAULT_PATH
-             PATHS "${LLVM_CMAKE_CONFIG_PATH}")
+find_package(LLVM REQUIRED CONFIG)
 llvm_map_components_to_libnames(LLVM_LIBRARIES all)
 
 
-set("${CLANG_CMAKE_CONFIG_PATH}" CACHE STRING
-    "Path to the CMake config in a Clang build directory.")
-
-find_package(CLANG REQUIRED CONFIG NO_DEFAULT_PATH
-             PATHS "${CLANG_CMAKE_CONFIG_PATH}")
+find_package(CLANG REQUIRED CONFIG)
 
 set(CLANG_LIBRARIES
     clangAnalysis
@@ -54,21 +46,21 @@ function(add_playground_executable target_name)
         "-fno-omit-frame-pointer -fsanitize=address")
   target_include_directories(${target_name}
                              PUBLIC ${LLVM_INCLUDE_DIRS} ${CLANG_INCLUDE_DIRS})
-target_link_libraries(${target_name} ${LLVM_LIBRARIES} ${CLANG_LIBRARIES})
+  target_link_libraries(${target_name} ${LLVM_LIBRARIES} ${CLANG_LIBRARIES})
+  add_dependencies(${target_name} GenerateSourceList)
 endfunction()
 
+set(find_cmd find ${CMAKE_SOURCE_DIR} -name "*.cpp")
+execute_process(COMMAND ${find_cmd} OUTPUT_FILE ${CMAKE_CURRENT_BINARY_DIR}/source.txt)
+add_custom_target(CurrentListing COMMAND ${find_cmd} > ${CMAKE_CURRENT_BINARY_DIR}/current_listing.txt)
+add_custom_target(GenerateSourceList
+                  COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_BINARY_DIR}/current_listing.txt ${CMAKE_CURRENT_BINARY_DIR}/source.txt
+                  DEPENDS CurrentListing)
+set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/source.txt)
 
-add_playground_executable(memorybuffer memorybuffer.cpp)
-add_playground_executable(memorybuffer-argv memorybuffer-argv.cpp)
-add_playground_executable(bitstream bitstream.cpp)
-add_playground_executable(commandline commandline.cpp)
-add_playground_executable(crtp crtp.cpp)
-add_playground_executable(driver driver.cpp)
-add_playground_executable(mmap-read mmap-read.cpp)
-add_playground_executable(opttable opttable.cpp)
-add_playground_executable(path path.cpp)
-add_playground_executable(read read.cpp)
-add_playground_executable(refcountedbase refcountedbase.cpp)
-add_playground_executable(sourcemgr sourcemgr.cpp)
-add_playground_executable(sourcemgr-simple sourcemgr-simple.cpp)
-add_playground_executable(saveandrestore saveandrestore.cpp)
+file(GLOB programs "*.cpp")
+foreach(program ${programs})
+  get_filename_component(prog_name ${program} NAME_WE)
+  add_playground_executable(${prog_name} ${program})
+endforeach()
+
