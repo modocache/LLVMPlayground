@@ -1,6 +1,0 @@
-[submodule "external/llvm"]
-	path = external/llvm
-	url = https://git.llvm.org/git/llvm.git/
-[submodule "external/clang"]
-	path = external/clang
-	url = https://git.llvm.org/git/clang.git/

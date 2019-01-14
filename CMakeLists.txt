@@ -7,20 +7,10 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 string(APPEND CMAKE_C_FLAGS " -pedantic -Wall -Wextra")
 string(APPEND CMAKE_CXX_FLAGS " -pedantic -Wall -Wextra")
 
-
-set("${LLVM_CMAKE_CONFIG_PATH}" CACHE STRING
-    "Path to the CMake config in an LLVM build directory.")
-
-find_package(LLVM REQUIRED CONFIG NO_DEFAULT_PATH
-             PATHS "${LLVM_CMAKE_CONFIG_PATH}")
+find_package(LLVM REQUIRED CONFIG)
 llvm_map_components_to_libnames(LLVM_LIBRARIES all)
 
-
-set("${CLANG_CMAKE_CONFIG_PATH}" CACHE STRING
-    "Path to the CMake config in a Clang build directory.")
-
-find_package(CLANG REQUIRED CONFIG NO_DEFAULT_PATH
-             PATHS "${CLANG_CMAKE_CONFIG_PATH}")
+find_package(CLANG REQUIRED CONFIG)
 
 set(CLANG_LIBRARIES
     clangAnalysis
@@ -54,7 +44,7 @@ function(add_playground_executable target_name)
         "-fno-omit-frame-pointer -fsanitize=address")
   target_include_directories(${target_name}
                              PUBLIC ${LLVM_INCLUDE_DIRS} ${CLANG_INCLUDE_DIRS})
-target_link_libraries(${target_name} ${LLVM_LIBRARIES} ${CLANG_LIBRARIES})
+  target_link_libraries(${target_name} ${LLVM_LIBRARIES} ${CLANG_LIBRARIES})
 endfunction()
 
 
